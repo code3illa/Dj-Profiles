@@ -8,6 +8,14 @@ class MemberListView(ListView):
     model = Member
     template_name = 'sodaapp/index.html'
     context_object_name = 'profiles'
+    ordering = ['name']
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Member.objects.filter(name__icontains=query) | Member.objects.filter(slogan__icontains=query)
+        else:
+            return Member.objects.all()
 
 
 class MemberCreateView(CreateView):
